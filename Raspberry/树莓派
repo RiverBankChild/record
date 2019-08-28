@@ -1,0 +1,11 @@
+
+
+1.Ê÷İ®ÅÉµ÷ÕûĞéÄâÄÚ´æ
+      free
+      sudo nano /etc/dphys-swapfile
+      sudo /etc/init.d/dphys-swapfile restart
+    
+    
+    
+ 
+
