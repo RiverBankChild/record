@@ -1,0 +1,65 @@
+
+
+1.创建工作空间并初始化
+mkdir -p ~/catkin_ws/src
+cd ~/catkin_ws/src
+catkin_init_workspace //初始化为catkin工作空间，可能是路径注册到了catkin服务器，然后生成一些初始文件
+
+2.构件c++对象和可执行程序
+在catkin workspace 下执行 catkin_make
+
+3.一些核心命令
+rosrun 启动单个进程
+rqt_graph 启动图形化工程结构图
+rosmsg 打印服务消息 rostopic echo也可以  消息的带宽是需要考虑的  rsmsg show complex
+rostopic -list 列出所有话题    rostopic hz counter 可以查看频率  rostopic info counter 查看详情   
+rosservece 
+roslaunch 启动一个功能模块可能包含多个rosrun
+
+4.tf树应该是个xml文件，里面描述了坐标转换映射
+
+5.ros可以用tab补全
+
+6.ros，编写代码的时候要有脚本声明，看下面的topic_publisher.py例子
+#!/usr/bin/env /python
+import rospy#ros自带的包
+from std_msgs.msg import Int32 #ros自带的消息格式 这个std_msg 配置在package.xml中
+rospy.init_node('topic_publisher') #将rospy赋型为publisher这样就能用publish的一些方法   该语句出现在每一个ros python节点中，它负责导入我们将用到的基础功能
+pub=rospy.Publisher('counter',Int32)#counter是话题名称
+rate=rospy.Rate(2)#发送速率是2赫兹
+count=0
+while not rospy.is_shutdown():
+   pub.publish(count)
+   count+=1
+   rate.sleep()#这应该是是根据频率睡眠
+   
+最后还要为这个topic_publisher增加运行权限  chmod u+x toppic_publisher.py
+
+
+7.ros大量使用回调函数，请看下面的topic_subscriber.py例子
+import rospy
+from std_msgs.msg import Int32
+
+def callback(msg):
+   print msg.data
+   
+rospy.init_node('topic_subcriber')   
+sub=rospy.Subcriber('counter',Int32,callback)#最后一项默认的是传递回调函数，并使用受到的消息作为他的参数
+rospy.spin()   #将程序运行交给ROS框架，这个函数在节点准备结束的时候返回，其实就是注册到ROS上面，相当于是ROS的一个进程或服务，起到持续监听，用来避免接近系统底层的while循环
+
+
+8.锁存话题，类似于地图这种大的数据消息，不能频繁发布，使用latched将其声明为锁存话题，这样订阅者会自动获取最后一个消息
+pub=rospy.Publisher('map',nav_msgs/OccupancyGrid,latched=True) #只是用命令行工具发布的锁存话题
+
+9.ROS只支持utf-8编码
+
+10.由于c的节点和python节点通信时注意消息的类型，有课鞥会发生错误，因为c语言的原生数据类型比python多
+
+11.catkin_make是和CMakekists.txt相关
+
+12.自定义消息(一般ros的消息就够用了)要更改package。xml 还要在CMakeLists.txt 里在find_package加上 ，还要告诉CATKIN_PACKAGE使用message——runtime，也就是要使用消息运行环境，还要告诉add_message_files,我们要编译这个消息文件
+
+13.ros节点常做的一件事就是传递消息，当有消息过来的时候才发布，这样的时候rate就可以去掉
+
+14.关于服务，服务是另一种在节点之间传递数据的方法，服务其实就是跨进程函数调用，能让一个节点运行另一个节点中的函数，服务需要声明，服务调用
+适合那些只需要偶尔去做的事情，例如你想要分发到主机上去做的通用计算就是一个很好的例子。

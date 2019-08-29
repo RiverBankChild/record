@@ -2,8 +2,16 @@
 
 1.树莓派调整虚拟内存
       free
-      sudo nano /etc/dphys-swapfile
-      sudo /etc/init.d/dphys-swapfile restart
+      df -B M
+      dd if=/dev/zero of=/swap_4G bs=1024 count=2024288
+      mkdir /opt/swap
+      mv swap_4G /opt/swap
+      mkswap /opt/swap/swap_4G
+      swapon /opt/swap/swap_4G   使用swap分区
+      free -m
+      swapoff -v  /opt/swap/swap_4G
+      #sudo nano /etc/dphys-swapfile   关闭swap分区
+      #sudo /etc/init.d/dphys-swapfile restart
     
     
     
