@@ -66,3 +66,4 @@ pub=rospy.Publisher('map',nav_msgs/OccupancyGrid,latched=True) #只是用命令行工具
 
 
 
+
