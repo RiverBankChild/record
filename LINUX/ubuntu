@@ -1,0 +1,50 @@
+
+
+1.树莓派调整虚拟内存
+      free
+      df -B M
+      dd if=/dev/zero of=/swap_4G bs=1024 count=2024288
+      mkdir /opt/swap
+      mv swap_4G /opt/swap
+      mkswap /opt/swap/swap_4G
+      swapon /opt/swap/swap_4G   使用swap分区
+      free -m
+      swapoff -v  /opt/swap/swap_4G
+      #sudo nano /etc/dphys-swapfile   关闭swap分区
+      #sudo /etc/init.d/dphys-swapfile restart
+      
+2.linux 系统修改时间
+	  sudo -i  
+	  date -s 08/30/2019
+	  date -s 19:07:23
+	      注意，这里说的是系统时间，是由Linux操作系统维护的。　　　　
+	      在系统启动时，Linux操作系统将时间从CMOS中读到系统时间变量中，以后修改时间通过修改系统时间实现。为了保持系统时间与CMOS时间的一致性，Linux每隔一段时间会将系统时间写入CMOS。由于该同步是每隔一段时间（大约是11分钟）进行的。
+	      如果要确保修改生效可以执行如下命令。　　　　
+	   #clock -w 　　　　这个命令强制把系统时间写入CMOS。
+	   
+    1.date {查看目前本地的时间}
+	2.hwclock --show {查看硬件的时间}
+	3.如果硬件时间和系统时间不同，那就对硬件的时间进行修改
+	4.hwclock --set --date '014-12-15 15:15:15' {设置硬件时间为14年12月15日15点15分15秒}
+	5.hwclock --hctosys {设置系统时间和硬件时间同步}
+	6.clock -w {保存时钟}
+    
+    timedate
+	Local time: 三 2017-07-05 10:57:53 CST
+	Universal time: 三 2017-07-05 02:57:53 UTC
+	Timezone: Asia/Chongqing (CST, +0800)
+	NTP enabled: no
+	NTP synchronized: no
+	RTC in local TZ: no
+	DST active: n/a
+	2，开启关闭ntp(这样就不会自动同步时间了)
+	
+	timedatectl set-ntp true／false
+	3，更改时间（使用date命令）
+	
+	date -s '2020-12-12 11:11:00' #将时间更改成2020年12月12号 11点11分
+	由于工作中较多使用centos，而且时间的一些命令也是我们经常会遇到的，在此记录下，便于以后查询。
+	
+	ntpdate  -u  ntp.api.bz
+	中国国家授时中心：210.72.145.44
+	NTP服务器(上海) ：ntp.api.bz
