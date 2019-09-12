@@ -2,6 +2,7 @@
 
 1.树莓派调整虚拟内存
       free
+      
       df -B M
       dd if=/dev/zero of=/swap_4G bs=1024 count=2024288
       mkdir /opt/swap
@@ -48,3 +49,5 @@
 	ntpdate  -u  ntp.api.bz
 	中国国家授时中心：210.72.145.44
 	NTP服务器(上海) ：ntp.api.bz
+
+	
